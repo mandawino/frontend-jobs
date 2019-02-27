@@ -1,0 +1,18 @@
+.App {
+  text-align: center;
+}
+
+.dropzone {
+  width : 60%;
+  height: 10%;
+  margin: 2em auto;
+  border-width: 2px;
+  border-style: dashed;
+  border-radius: 5px;
+}
+
+.dropzone-active {
+  border-style: solid;
+  border-color: lightgreen;
+  background-color: lightgray;
+}
