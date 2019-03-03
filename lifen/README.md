@@ -14,7 +14,7 @@ In order to be more efficient and fast, I used :
 First, clone the project and install the dependencies :
 ```
 git clone https://github.com/mandawino/frontend-jobs.git
-cd lifen
+cd frontend-jobs/lifen
 yarn
 ```
 
