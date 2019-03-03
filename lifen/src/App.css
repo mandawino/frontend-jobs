@@ -11,8 +11,27 @@
   border-radius: 5px;
 }
 
-.dropzone-active {
+.dropzone-accept {
   border-style: solid;
-  border-color: lightgreen;
   background-color: lightgray;
+  border-color: lightgreen;
+}
+
+.dropzone-reject {
+  border-style: solid;
+  background-color: lightgray;
+  border-color: lightcoral;
+  color: lightcoral;
+}
+
+.file-uploaded {
+  color: lightgreen;
+}
+
+.file-failed {
+  color : lightcoral;
+}
+
+.total {
+  color: grey;
 }

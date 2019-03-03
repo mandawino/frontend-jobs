@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
-import Title from './Title'
-import Dropzone from './Dropzone'
+import Title from './presenters/Title'
+import Content from './containers/Content'
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <Title/>
-        <Dropzone/>
+        <Content/>
       </div>
     );
   }
