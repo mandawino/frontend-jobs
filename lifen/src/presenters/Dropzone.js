@@ -8,18 +8,23 @@ const Dropzone = (props) => {
      * Function called when the user drop a file in the dropzone
      */
     const onDrop = (files) => {
-        let params = [];
-        for(const file of files){
-            const reader = new FileReader();
-            reader.onload =  () => {
-                let content = btoa(reader.result);
-                params.push({"name": file.path,"file": content});
-            };
-            reader.onloadend = () => {
-                props.onDrop(params);
-            }
-            reader.readAsBinaryString(file);
-        }
+        let promises = files.map(file => {
+            return new Promise((resolve, reject) => {
+                    let result;
+                    const reader = new FileReader();
+                    reader.onload =  () => {
+                        let content = btoa(reader.result);
+                        result = {'name': file.path, 'file':content};
+                    }
+                    reader.onloadend = () => {
+                        resolve(result);
+                    }
+                    reader.readAsBinaryString(file);
+                })
+        });
+        Promise.all(promises).then(params => {
+            props.processFiles(params);
+        });
     }
 
     return (

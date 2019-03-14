@@ -29,8 +29,7 @@ class Content extends Component {
                     const fileName = path.basename(file);
 
                     let content = fs.readFileSync(file, 'base64');
-                    this.processFiles([{"name": fileName, "file": content}]);
-
+                    this.processFiles([{'name': fileName, 'file': content}]);
                 }
             })
             .on('unlink', (file) => {
@@ -47,7 +46,7 @@ class Content extends Component {
      * Upload the file to the API server
      */
     upload = (file) => {
-        console.info("Uploading", file)
+        console.info("Uploading", file, file.name)
         this.setState((state) => {
             return {'files': {...state.files, [file.name] : 'uploading'}};
         });
@@ -55,38 +54,27 @@ class Content extends Component {
             'method': 'POST',
             body: JSON.stringify(file)
         }
-        fetch('https://fhirtest.uhn.ca/baseDstu3/Binary', configFetch)
-            .then(response => {
-                if(response.ok){
-                    response.json()
-                        .then((json) => {
-                            console.info('Uploaded', json);
-                            this.setState((state) => {
-                                return {'files': {...state.files, [json.name] : 'uploaded'}};
-                            });
-                        });
-                } else {
-                    console.error(`Upload of ${file.name} failed`);
-                    this.setState((state) => {
-                        return {'files': {...state.files, [file.name] : 'failed'}};
-                    });
-                }
+        return fetch('https://fhirtest.uhn.ca/baseDstu3/Binary', configFetch)
+            .then(response => response.json())
+            .then(json => {
+                console.info("Uploaded", json);
+                this.setState((state) => {
+                    return {'files': {...state.files, [file.name] : 'uploaded'}};
+                });
             })
-            .catch((error) => {
-                console.error(`Upload of ${file.name} failed`, error);
+            .catch(err => {
+                console.error(`Upload of ${file.name} failed`, err);
                 this.setState((state) => {
                     return {'files': {...state.files, [file.name] : 'failed'}};
                 });
-            });
+            })
     }
 
     /**
      * Upload every files to the API server
      */
     uploadAll = (files) => {
-        for(const file of files){
-            this.upload(file);
-        }
+        return Promise.all(files.map((file) => this.upload(file)));
     }
 
     /**
@@ -120,7 +108,7 @@ class Content extends Component {
             (file, index) => <File key={index} file={file} status={this.state.files[file]}/>
         );
         return (<div>
-            <Dropzone onDrop={this.processFiles}/>
+            <Dropzone processFiles={this.processFiles}/>
             <div>{files}</div>
             <Total id="files" total={this.state.total}/>
         </div>)
